@@ -83,7 +83,7 @@ El proyecto corre en `http://127.0.0.1:8000`
 
 ---
 
-## Como funciona el proyecto por dentro(les explique en el salon)
+## Como funciona el proyecto 
 
 El flujo completo desde que alguien hace una peticion hasta que la base de datos responde es el siguiente:
 
