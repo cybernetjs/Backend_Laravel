@@ -1,59 +1,228 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistema Academico 
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+ API 
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requisitos previos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Antes de instalar el proyecto necesitas tener en tu maquina:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2 o superior
+- Composer
+- MySQL 8.0 o superior
+- Node.js y npm
+- Git
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Instalacion
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/tu-usuario/tu-repositorio.git
+cd tu-repositorio
+```
 
-## Laravel Sponsors
+### 2. Instalar dependencias de PHP
+```bash
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Copiar el archivo de entorno
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+### 4. Configurar la base de datos en el .env
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=sistema_academico
+DB_USERNAME=root
+DB_PASSWORD=tu_password
+SESSION_DRIVER=database
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 5. Generar la key de la aplicacion
+```bash
+php artisan key:generate
+```
 
-## Contributing
+### 6. Crear la base de datos en MySQL
+```bash
+mysql -u root -p
+```
+```sql
+CREATE DATABASE sistema_academico;
+exit;
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 7. Ejecutar las migraciones
+```bash
+php artisan migrate
+```
 
-## Code of Conduct
+Si necesitas resetear todo desde cero:
+```bash
+php artisan migrate:fresh
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 8. Instalar API (necesario para las rutas /api)
+```bash
+php artisan install:api
+```
 
-## Security Vulnerabilities
+### 9. Levantar el servidor
+```bash
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+El proyecto corre en `http://127.0.0.1:8000`
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Como funciona el proyecto por dentro
+
+El flujo completo desde que alguien hace una peticion hasta que la base de datos responde es el siguiente:
+
+```
+Cliente (navegador, en este caso thunder client)
+        |
+        | HTTP Request (GET, POST, PUT, DELETE)
+        v
+routes/api.php          <-- define las rutas y a que controlador van
+        |
+        v
+app/Http/Controllers/   <-- recibe la peticion, valida los datos, llama al modelo
+        |
+        v
+app/Models/             <-- representa la tabla en la base de datos, maneja relaciones
+        |
+        v
+Base de datos MySQL     <-- ejecuta la consulta y devuelve el resultado
+        |
+        v
+Controller              <-- recibe el resultado y lo convierte en JSON
+        |
+        v
+Cliente recibe la respuesta en JSON
+```
+
+---
+
+## Estructura de archivos importantes
+
+```
+routes/
+  api.php                         <-- todas las rutas de la API
+
+app/
+  Http/
+    Controllers/
+      FacultadController.php
+      EspecialidadController.php
+      PlanEstudiosController.php
+      PeriodoAcademicoController.php
+      DocenteController.php
+      EstudianteController.php
+      CursoController.php
+      SeccionController.php
+      MatriculaController.php
+      NotaController.php
+
+  Models/
+      Facultad.php
+      Especialidad.php
+      PlanEstudios.php
+      PeriodoAcademico.php
+      Docente.php
+      Estudiante.php
+      Curso.php
+      Seccion.php
+      Matricula.php
+      Nota.php
+
+database/
+  migrations/
+      create_facultad_table.php
+      create_especialidad_table.php
+      create_plan_estudios_table.php
+      create_periodo_academico_table.php
+      create_docente_table.php
+      create_estudiante_table.php
+      create_curso_table.php
+      create_seccion_table.php
+      create_matricula_table.php
+      create_nota_table.php
+      create_users_table.php
+      create_sessions_table.php
+      create_personal_access_tokens_table.php
+      create_password_reset_tokens_table.php
+      create_failed_jobs_table.php
+```
+
+---
+
+## Que hace cada parte
+
+**Migraciones** — Son archivos PHP que le dicen a Laravel como crear las tablas en la base de datos. En vez de crear las tablas a mano en phpMyAdmin, Laravel las crea automaticamente con `php artisan migrate`. Cada migracion representa una tabla.
+
+**Modelos** — Cada modelo representa una tabla de la base de datos. Desde el modelo puedes consultar, insertar, actualizar y eliminar registros sin escribir SQL. Tambien definen las relaciones entre tablas (un estudiante tiene muchas matriculas, una matricula tiene una nota, etc).
+
+**Controladores** — Reciben la peticion HTTP, validan los datos que llegan, usan el modelo para interactuar con la base de datos y devuelven la respuesta en formato JSON.
+
+**Rutas (api.php)** — Conectan una URL con un controlador. Por ejemplo, cuando alguien hace GET a `/api/facultades`, la ruta le dice a Laravel que ejecute el metodo `index` del `FacultadController`.
+
+---
+
+## Endpoints disponibles
+
+Todos los endpoints siguen el mismo patron para cada entidad: listar, crear, ver uno, actualizar y eliminar.
+
+| Metodo | Ruta | Que hace |
+|--------|------|----------|
+| GET | /api/facultades | Lista todas las facultades |
+| POST | /api/facultades | Crea una facultad nueva |
+| GET | /api/facultades/{id} | Muestra una facultad especifica |
+| PUT | /api/facultades/{id} | Actualiza una facultad |
+| DELETE | /api/facultades/{id} | Elimina una facultad |
+| GET | /api/especialidades | Lista especialidades con su facultad |
+| POST | /api/especialidades | Crea una especialidad |
+| GET | /api/plan-estudios | Lista planes de estudio |
+| POST | /api/plan-estudios | Crea un plan de estudios |
+| GET | /api/periodos | Lista periodos academicos |
+| POST | /api/periodos | Crea un periodo academico |
+| GET | /api/docentes | Lista docentes |
+| POST | /api/docentes | Crea un docente |
+| GET | /api/estudiantes | Lista estudiantes con su especialidad |
+| POST | /api/estudiantes | Crea un estudiante |
+| GET | /api/cursos | Lista cursos con su plan de estudios |
+| POST | /api/cursos | Crea un curso |
+| GET | /api/secciones | Lista secciones con curso, docente y periodo |
+| POST | /api/secciones | Crea una seccion |
+| GET | /api/matriculas | Lista matriculas con estudiante y seccion |
+| POST | /api/matriculas | Matricula a un estudiante en una seccion |
+| GET | /api/notas | Lista notas con su matricula |
+| POST | /api/notas | Registra una nota |
+| PUT | /api/notas/{id} | Actualiza una nota |
+
+---
+
+## Base de datos
+
+Las tablas y sus columnas principales son:
+
+| Tabla | Columnas principales |
+|-------|---------------------|
+| facultad | Codigo, Nombre, Decano |
+| especialidad | Codigo, Nombre, Modalidad, Codigo_Facultad |
+| plan_estudios | Codigo, Version, Anio, Codigo_Especialidad |
+| periodo_academico | Id, Semestre, Fecha_Inicio, Fecha_Fin |
+| docente | Codigo, Nombre, Apellidos, Categoria, Email |
+| estudiante | Codigo, Nombre, Apellidos, DNI, Direccion, Codigo_Especialidad |
+| curso | Codigo, Nombre, Creditos, HorasTeoria, HorasPractica, Codigo_PlanEstudios |
+| seccion | Codigo, Nombre, Aforo, Codigo_Curso, Codigo_Docente, Codigo_PeriodoAcademico |
+| matricula | Codigo, FechaMatricula, Codigo_Estudiante, Codigo_Seccion, Codigo_PeriodoAcademico |
+| nota | Codigo, NotaParcial, NotaFinal, Estado, Codigo_Matricula |
