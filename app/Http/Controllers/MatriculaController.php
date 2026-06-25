@@ -10,7 +10,13 @@ class MatriculaController extends Controller
     public function index()
     {
         return response()->json(
-            Matricula::with(['estudiante', 'seccion', 'periodoAcademico'])->get()
+            Matricula::with([
+                'estudiante',
+                'seccion.curso',
+                'seccion.docente',
+                'periodoAcademico',
+                'nota'
+            ])->get()
         );
     }
 
@@ -29,8 +35,13 @@ class MatriculaController extends Controller
 
     public function show($id)
     {
-        $matricula = Matricula::with(['estudiante', 'seccion', 'periodoAcademico', 'nota'])
-                              ->findOrFail($id);
+        $matricula = Matricula::with([
+            'estudiante',
+            'seccion.curso',
+            'seccion.docente',
+            'periodoAcademico',
+            'nota'
+        ])->findOrFail($id);
         return response()->json($matricula);
     }
 
@@ -47,4 +58,3 @@ class MatriculaController extends Controller
         return response()->json(['mensaje' => 'Matrícula eliminada']);
     }
 }
-
