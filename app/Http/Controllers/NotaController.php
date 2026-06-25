@@ -2,47 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Nota;
 use Illuminate\Http\Request;
 
 class NotaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Nota::with('matricula')->get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'NotaParcial'      => 'nullable|numeric|min:0|max:20',
+            'NotaFinal'        => 'nullable|numeric|min:0|max:20',
+            'Estado'           => 'required|in:PENDIENTE,APROBADO,DESAPROBADO',
+            'Codigo_Matricula' => 'required|integer|exists:matricula,Codigo|unique:nota,Codigo_Matricula',
+        ]);
+
+        $nota = Nota::create($request->all());
+        return response()->json($nota, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $nota = Nota::with('matricula')->findOrFail($id);
+        return response()->json($nota);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $nota = Nota::findOrFail($id);
+        $nota->update($request->all());
+        return response()->json($nota);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Nota::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Nota eliminada']);
     }
 }

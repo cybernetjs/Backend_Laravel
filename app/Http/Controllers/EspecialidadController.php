@@ -2,47 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Especialidad;
 use Illuminate\Http\Request;
 
 class EspecialidadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Especialidad::with('facultad')->get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Nombre'          => 'required|string|max:100',
+            'Modalidad'       => 'required|string|max:50',
+            'Codigo_Facultad' => 'required|integer|exists:facultad,Codigo',
+        ]);
+
+        $especialidad = Especialidad::create($request->all());
+        return response()->json($especialidad, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $especialidad = Especialidad::with('facultad')->findOrFail($id);
+        return response()->json($especialidad);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $especialidad = Especialidad::findOrFail($id);
+        $especialidad->update($request->all());
+        return response()->json($especialidad);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Especialidad::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Especialidad eliminada']);
     }
 }

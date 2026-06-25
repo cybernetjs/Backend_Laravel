@@ -2,47 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PlanEstudios;
 use Illuminate\Http\Request;
 
 class PlanEstudiosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(PlanEstudios::with('especialidad')->get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Version'             => 'required|string|max:20',
+            'Anio'                => 'required|integer',
+            'Codigo_Especialidad' => 'required|integer|exists:especialidad,Codigo',
+        ]);
+
+        $plan = PlanEstudios::create($request->all());
+        return response()->json($plan, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $plan = PlanEstudios::with('especialidad')->findOrFail($id);
+        return response()->json($plan);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $plan = PlanEstudios::findOrFail($id);
+        $plan->update($request->all());
+        return response()->json($plan);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        PlanEstudios::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Plan de estudios eliminado']);
     }
 }

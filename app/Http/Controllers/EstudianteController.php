@@ -2,47 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 
 class EstudianteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Estudiante::with('especialidad')->get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Nombre'              => 'required|string|max:100',
+            'Apellidos'           => 'required|string|max:100',
+            'DNI'                 => 'required|string|max:15|unique:estudiante,DNI',
+            'Direccion'           => 'nullable|string|max:150',
+            'Codigo_Especialidad' => 'required|integer|exists:especialidad,Codigo',
+        ]);
+
+        $estudiante = Estudiante::create($request->all());
+        return response()->json($estudiante, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $estudiante = Estudiante::with('especialidad')->findOrFail($id);
+        return response()->json($estudiante);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $estudiante = Estudiante::findOrFail($id);
+        $estudiante->update($request->all());
+        return response()->json($estudiante);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Estudiante::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Estudiante eliminado']);
     }
 }

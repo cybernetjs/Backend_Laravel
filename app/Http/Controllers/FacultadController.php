@@ -2,47 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Facultad;
 use Illuminate\Http\Request;
 
 class FacultadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // GET /api/facultades → listar todas
     public function index()
     {
-        //
+        return response()->json(Facultad::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // POST /api/facultades → crear nueva
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Nombre' => 'required|string|max:100',
+            'Decano' => 'required|string|max:100',
+        ]);
+
+        $facultad = Facultad::create($request->all());
+        return response()->json($facultad, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // GET /api/facultades/{id} → mostrar una
+    public function show($id)
     {
-        //
+        $facultad = Facultad::findOrFail($id);
+        return response()->json($facultad);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // PUT /api/facultades/{id} → actualizar
+    public function update(Request $request, $id)
     {
-        //
+        $facultad = Facultad::findOrFail($id);
+        $facultad->update($request->all());
+        return response()->json($facultad);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // DELETE /api/facultades/{id} → eliminar
+    public function destroy($id)
     {
-        //
+        Facultad::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Facultad eliminada']);
     }
 }

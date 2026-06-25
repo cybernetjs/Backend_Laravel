@@ -2,47 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Matricula;
 use Illuminate\Http\Request;
 
 class MatriculaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(
+            Matricula::with(['estudiante', 'seccion', 'periodoAcademico'])->get()
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'FechaMatricula'          => 'required|date',
+            'Codigo_Estudiante'       => 'required|integer|exists:estudiante,Codigo',
+            'Codigo_Seccion'          => 'required|integer|exists:seccion,Codigo',
+            'Codigo_PeriodoAcademico' => 'required|integer|exists:periodo_academico,Id',
+        ]);
+
+        $matricula = Matricula::create($request->all());
+        return response()->json($matricula, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $matricula = Matricula::with(['estudiante', 'seccion', 'periodoAcademico', 'nota'])
+                              ->findOrFail($id);
+        return response()->json($matricula);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $matricula = Matricula::findOrFail($id);
+        $matricula->update($request->all());
+        return response()->json($matricula);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Matricula::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Matrícula eliminada']);
     }
 }
+

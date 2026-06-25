@@ -2,47 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Docente;
 use Illuminate\Http\Request;
 
 class DocenteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Docente::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Nombre'    => 'required|string|max:100',
+            'Apellidos' => 'required|string|max:100',
+            'Categoria' => 'required|string|max:50',
+            'Email'     => 'required|email|unique:docente,Email',
+        ]);
+
+        $docente = Docente::create($request->all());
+        return response()->json($docente, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $docente = Docente::findOrFail($id);
+        return response()->json($docente);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $docente = Docente::findOrFail($id);
+        $docente->update($request->all());
+        return response()->json($docente);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Docente::findOrFail($id)->delete();
+        return response()->json(['mensaje' => 'Docente eliminado']);
     }
 }
