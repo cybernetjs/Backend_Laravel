@@ -22,3 +22,4 @@ Route::apiResource('cursos', CursoController::class);
 Route::apiResource('secciones', SeccionController::class);
 Route::apiResource('matriculas', MatriculaController::class);
 Route::apiResource('notas', NotaController::class);
+Route::get('estudiantes/{id}/matriculas', [MatriculaController::class, 'porEstudiante']);

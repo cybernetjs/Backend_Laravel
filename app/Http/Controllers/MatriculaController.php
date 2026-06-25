@@ -19,6 +19,18 @@ class MatriculaController extends Controller
             ])->get()
         );
     }
+    public function porEstudiante($id)
+{
+    $matriculas = Matricula::with([
+        'estudiante',
+        'seccion.curso',
+        'seccion.docente',
+        'periodoAcademico',
+        'nota'
+    ])->where('Codigo_Estudiante', $id)->get();
+
+    return response()->json($matriculas);
+}
 
     public function store(Request $request)
     {

@@ -4,6 +4,42 @@
 
 ---
 
+##  ¿Qué es un Endpoint?
+
+Un endpoint es una URL específica a la que puedes hacer una petición HTTP. Es la "puerta de entrada" a un recurso de la API.
+
+```
+http://127.0.0.1:8000/api/matriculas/1
+│                    │   │           │
+│                    │   │           └── ID del recurso
+│                    │   └── recurso (tabla)
+│                    └── prefijo API
+└── servidor
+```
+
+---
+
+##  ¿Qué es la API?
+
+```
+React (frontend)
+      │
+      │  HTTP Request (GET, POST, PUT, DELETE)
+      ▼
+   API Laravel
+      │
+      ├── routes/api.php   → define las URLs
+      ├── Controllers      → procesa la petición
+      └── Models           → consulta la base de datos
+      │
+      ▼
+   MySQL (XAMPP)
+      │
+      ▼
+   JSON Response → regresa a React
+```
+
+---
 ## Requisitos previos
 
 Antes de instalar el proyecto necesitas tener en tu maquina:

@@ -17,6 +17,7 @@ public function up()
         $table->integer('Creditos');
         $table->integer('HorasTeoria');
         $table->integer('HorasPractica');
+        $table->integer('Semestre')->default(1);
         $table->integer('Codigo_PlanEstudios');
         $table->foreign('Codigo_PlanEstudios')
               ->references('Codigo')->on('plan_estudios')
