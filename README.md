@@ -22,6 +22,8 @@ http://127.0.0.1:8000/api/matriculas/1
 ##  ¿Qué es la API?
 
 ```
+API = Routes + Controllers + Models + BD
+
 React (frontend)
       │
       │  HTTP Request (GET, POST, PUT, DELETE)
