@@ -106,7 +106,10 @@ Si necesitas resetear todo desde cero:
 ```bash
 php artisan migrate:fresh
 ```
-
+Cuando hacemos un cambio en la base de datos ,Eso borrará todo, recreará las tablas con la nueva estructura e insertará todos los datos automáticamente. Dime qué aparece.
+```bash
+php artisan migrate:fresh --seed
+```
 ### 8. Instalar API (necesario para las rutas /api)
 ```bash
 php artisan install:api
